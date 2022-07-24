@@ -1,0 +1,9 @@
+---
+plugin: gcp_compute
+projects:
+  - ansible-controller-357219
+auth_kind: serviceaccount
+service_account_file: ansible-controller-357219-b72a6c427e96.json
+hostnames:
+  # List host by name instead of the default public ip
+  - name

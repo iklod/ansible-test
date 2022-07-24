@@ -1,0 +1,19 @@
+---
+gcp_cred_kind: serviceaccount
+service_account_email: ansible-controller@ansible-controller-357219.iam.gserviceaccount.com
+gcp_cred_file: ansible-controller-357219-b72a6c427e96.json
+gcp_project: ansible-controller-357219
+ansible_user: # Service group with ssh sa_xxxxxxxx
+image: projects/debian-cloud/global/images/debian-10-buster-v20220719
+zone: europe-west1-b
+region: europe-west1
+lb_members: europe-west1/web-server1,europe-west1/web-server2
+type_machine: n1-standard-1
+instance_list:
+  - web-server1
+  - web-server2
+  - db-server
+group_list:
+  - web_servers
+  - web_servers
+  - db_servers

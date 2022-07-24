@@ -1,0 +1,38 @@
+---
+    - name: Allow HTTP traffic
+      gce_net:
+        fwname: all-http
+        name: default
+        allowed: tcp:80
+        project_id: "{{ gcp_project }}"
+        credentials_file: "{{ gcp_cred_file }}"
+        service_account_email: "{{ service_account_email }}"
+
+    - name: Allow HTTP traffic
+      gce_net:
+        fwname: all-database
+        name: default
+        allowed: tcp:3306
+        project_id: "{{ gcp_project }}"
+        credentials_file: "{{ gcp_cred_file }}"
+        service_account_email: "{{ service_account_email }}"
+
+    - name: Create the load-balancer and add members
+      gce_lb:
+        name: lb1
+        region: "{{ region }}"
+        members: "{{ lb_members }}"
+        project_id: "{{ gcp_project }}"
+        credentials_file: "{{ gcp_cred_file }}"
+        service_account_email: "{{ service_account_email }}"
+      register: lb_result
+
+    - name: Send notification email
+      mail:
+        host: smtp.gmail.com
+        port: 465
+        username: sly@gmail.com
+        password: "{{ g_password }}"
+        to: SLY <sly@gmail.com>
+        subject: Web server
+        body: 'Go to http://{{ lb_result.external_ip }} to access your web application.'

@@ -1,0 +1,47 @@
+---
+- name: Create an instance
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - include_tasks: "manage_instance.yml"
+      loop: "{{ instance_list|zip(group_list)|list }}"
+      loop_control:
+        loop_var: machine_loop
+
+- name: Setup database server
+  hosts: db_servers
+  become: true
+  become_method: sudo
+  connection: ssh
+  roles:
+    - prereq
+    - mysql
+
+- name: Setup web servers
+  hosts: web_servers
+  become: true
+  become_method: sudo
+  connection: ssh
+  roles:
+    - prereq
+    - flask
+
+- name: Manage traffic
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - include_tasks: "load_balancing.yml"
+
+# - name: ping
+#   hosts: all
+#   tasks:
+#     - ping:
+
+# - name: with_together
+#   hosts: localhost
+#   tasks:
+#     - debug:
+#         msg: "{{ machine_loop.0 }} - {{ machine_loop.1 }}"
+#       loop: "{{ instance_list|zip(group_list)|list }}"
+#       loop_control:
+#         loop_var: machine_loop
